@@ -1,0 +1,4 @@
+attribute,protected_group,reference_group,approval_rate_protected,approval_rate_reference,repayer_approval_protected,repayer_approval_reference,demographic_parity_difference,equal_opportunity_difference,disparate_impact_ratio,demographic_parity_verdict,equal_opportunity_verdict,disparate_impact_verdict
+education,below university,university+,0.6053,0.8137,0.8433,0.8716,-0.2083,-0.0283,0.744,UNFAIR,FAIR,UNFAIR
+age,young (<30),30+,0.4545,0.7078,0.7125,0.8772,-0.2532,-0.1647,0.6422,UNFAIR,UNFAIR,UNFAIR
+home_ownership,non-homeowner,homeowner,0.2445,0.8647,0.4824,0.9508,-0.6201,-0.4684,0.2828,UNFAIR,UNFAIR,UNFAIR

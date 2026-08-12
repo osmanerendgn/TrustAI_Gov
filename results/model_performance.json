@@ -1,0 +1,10 @@
+{
+  "model": "LogisticRegression(class_weight='balanced')",
+  "n_features": 11,
+  "n_train": 80000,
+  "n_test": 20000,
+  "threshold": 0.5,
+  "roc_auc": 0.9136,
+  "overall_approval_rate": 0.6618,
+  "overall_repayment_rate": 0.7378
+}

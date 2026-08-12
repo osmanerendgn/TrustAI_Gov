@@ -1,0 +1,7 @@
+attribute,group,role,n,share,true_delinquency_rate
+education,below university,protected,72606,0.7261,0.3284
+education,university+,reference,27394,0.2739,0.0869
+age,young (<30),protected,18169,0.1817,0.3988
+age,30+,reference,81831,0.8183,0.232
+home_ownership,non-homeowner,protected,32704,0.327,0.5241
+home_ownership,homeowner,reference,67296,0.673,0.135
