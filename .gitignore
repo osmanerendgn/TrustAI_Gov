@@ -1,0 +1,22 @@
+# Dataset — downloaded by src/data_prep.py, not committed
+data/*.csv
+
+# Generated intermediate between the pipeline scripts
+results/predictions.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
