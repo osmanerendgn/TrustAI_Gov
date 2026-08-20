@@ -9,14 +9,16 @@ Usage:
 
 import ast
 import urllib.request
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data" / "istanbul_synthetic_data_v22.csv"
-RESULTS = ROOT / "results"
+from paths import DATA, TASK1_RESULTS, ensure_dirs
+
 SOURCE_URL = (
     "https://raw.githubusercontent.com/atalaydenknalbant/"
     "underbanked_risk_estimation/main/istanbul_synthetic_data_v22.csv"
@@ -110,15 +112,15 @@ def group_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
-    RESULTS.mkdir(exist_ok=True)
+    ensure_dirs()
     df = prepare()
     summary = group_summary(df)
-    summary.to_csv(RESULTS / "group_summary.csv", index=False)
+    summary.to_csv(TASK1_RESULTS / "group_summary.csv", index=False)
 
     print(f"rows: {len(df):,}   features: {len(FEATURES)}")
     print(f"overall delinquency rate: {df[TARGET].mean():.4f}\n")
     print(summary.to_string(index=False))
-    print(f"\nwrote {RESULTS / 'group_summary.csv'}")
+    print(f"\nwrote {TASK1_RESULTS / 'group_summary.csv'}")
 
 
 if __name__ == "__main__":

@@ -39,7 +39,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from data_prep import SENSITIVE_GROUPS  # noqa: E402
 
-RESULTS = Path(__file__).resolve().parents[1] / "results"
+from paths import PREDICTIONS, TASK1_RESULTS
 
 PARITY_TOLERANCE = 0.10   # accepted gap for demographic parity / equal opportunity
 FOUR_FIFTHS = 0.80        # legal threshold for disparate impact
@@ -111,21 +111,21 @@ def plot_group_rates(table: pd.DataFrame) -> Path:
     fig.suptitle("Approval rate by group (dashed line = four-fifths of the reference group)",
                  fontsize=11)
     fig.tight_layout()
-    path = RESULTS / "fig_approval_rates.png"
+    path = TASK1_RESULTS / "fig_approval_rates.png"
     fig.savefig(path, dpi=120)
     plt.close(fig)
     return path
 
 
 def main() -> None:
-    predictions = pd.read_csv(RESULTS / "predictions.csv")
+    predictions = pd.read_csv(PREDICTIONS)
 
     rows = [
         compute_metrics(predictions, attribute, spec["protected"], spec["reference"])
         for attribute, spec in SENSITIVE_GROUPS.items()
     ]
     table = add_verdicts(pd.DataFrame(rows))
-    table.to_csv(RESULTS / "fairness_metrics.csv", index=False)
+    table.to_csv(TASK1_RESULTS / "fairness_metrics.csv", index=False)
 
     figure = plot_group_rates(table)
 
@@ -136,7 +136,7 @@ def main() -> None:
         "disparate_impact_ratio", "disparate_impact_verdict",
     ]
     print(table[display_columns].to_string(index=False))
-    print(f"\nwrote {RESULTS / 'fairness_metrics.csv'}")
+    print(f"\nwrote {TASK1_RESULTS / 'fairness_metrics.csv'}")
     print(f"wrote {figure}")
 
 

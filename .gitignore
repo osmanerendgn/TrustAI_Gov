@@ -1,8 +1,8 @@
 # Dataset — downloaded by src/data_prep.py, not committed
 data/*.csv
 
-# Generated intermediate between the pipeline scripts
-results/predictions.csv
+# Generated intermediates between the pipeline scripts
+.cache/
 
 # Python
 __pycache__/
