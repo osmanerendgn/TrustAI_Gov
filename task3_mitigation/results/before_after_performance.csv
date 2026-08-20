@@ -1,0 +1,5 @@
+variant,roc_auc,accuracy,recall_delinquency,precision_delinquency,defaulters_approved_FN,good_payers_rejected_FP,approval_rate
+baseline,0.9136,0.8587,0.8753,0.6787,654,2173,0.6618
+A: remove age+proxies,0.9146,0.8651,0.8723,0.693,670,2027,0.6699
+B: group threshold,0.9136,0.8648,0.8429,0.7016,824,1880,0.6849
+C: reweighting,0.9123,0.8598,0.8602,0.6854,733,2071,0.6708

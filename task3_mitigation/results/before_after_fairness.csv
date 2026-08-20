@@ -1,0 +1,13 @@
+attribute,protected_group,reference_group,approval_rate_protected,approval_rate_reference,repayer_approval_protected,repayer_approval_reference,demographic_parity_difference,equal_opportunity_difference,disparate_impact_ratio,variant
+education,below university,university+,0.6053,0.8137,0.8433,0.8716,-0.2083,-0.0283,0.744,baseline
+age,young (<30),30+,0.4545,0.7078,0.7125,0.8772,-0.2532,-0.1647,0.6422,baseline
+home_ownership,non-homeowner,homeowner,0.2445,0.8647,0.4824,0.9508,-0.6201,-0.4684,0.2828,baseline
+education,below university,university+,0.6128,0.8234,0.8527,0.8824,-0.2106,-0.0297,0.7442,A: remove age+proxies
+age,young (<30),30+,0.5017,0.7072,0.7809,0.8769,-0.2056,-0.0959,0.7093,A: remove age+proxies
+home_ownership,non-homeowner,homeowner,0.2494,0.8743,0.4921,0.9607,-0.6249,-0.4687,0.2853,A: remove age+proxies
+education,below university,university+,0.6318,0.8279,0.8663,0.8853,-0.196,-0.019,0.7632,B: group threshold
+age,young (<30),30+,0.5821,0.7078,0.8462,0.8772,-0.1257,-0.031,0.8224,B: group threshold
+home_ownership,non-homeowner,homeowner,0.2617,0.8908,0.5144,0.9674,-0.6291,-0.453,0.2937,B: group threshold
+education,below university,university+,0.6176,0.814,0.8537,0.8716,-0.1964,-0.018,0.7587,C: reweighting
+age,young (<30),30+,0.5504,0.6976,0.8298,0.8649,-0.1471,-0.0351,0.7891,C: reweighting
+home_ownership,non-homeowner,homeowner,0.2296,0.8854,0.4574,0.9661,-0.6559,-0.5087,0.2593,C: reweighting
