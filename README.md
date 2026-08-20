@@ -8,7 +8,7 @@ linked tasks: measure fairness, act on it, and report it for governance.
 | Task | Title | Status |
 |---|---|---|
 | [1](task1_fairness_metrics/) | Compare Basic Fairness Metrics | ✅ done |
-| [2](task2_governance_report/) | Governance-Based Fairness Assessment Report | ⬜ not started |
+| [2](task2_governance_report/) | Governance-Based Fairness Assessment Report | ✅ done |
 | [3](task3_mitigation/) | Fairness Mitigation and Before/After Comparison | ✅ done |
 
 ## Structure
@@ -63,6 +63,21 @@ opportunity passes — among applicants who genuinely repay, both groups are app
 same rate. A single fairness number is never enough; you have to say which definition you mean.
 
 → [Task 1 details](task1_fairness_metrics/README.md)
+
+## Task 2 — governance assessment
+
+| ID | Risk | Affected group | Severity | DI before → after |
+|---|---|---|---|---|
+| FR-01 | Education level | below university (72.6 %) | Medium | 0.744 → 0.763 ❌ |
+| FR-02 | Age | young < 30 (18.2 %) | High | 0.642 → **0.822 ✅** |
+| FR-03 | Home ownership | non-homeowner (32.7 %) | **Critical** | 0.283 → 0.294 ❌ |
+
+**Deployment decision: 🔴 NO-GO.** Two of three attributes stay below the four-fifths threshold
+under every mitigation tested. Home ownership sits at roughly a third of the legal threshold and
+is essentially unmoved. Age can be fixed, but only by a method that is itself disparate treatment
+under ECOA.
+
+→ [Full report (HTML)](task2_governance_report/report.html) · [Task 2 details](task2_governance_report/README.md)
 
 ## Task 3 — mitigation on the age axis
 
