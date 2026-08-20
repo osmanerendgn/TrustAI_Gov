@@ -1,111 +1,89 @@
-# Comparing Basic Fairness Metrics
+# TrustAI Internship — Fairness Assignments
 
-**TrustAI Internship — First Task** · Osman Eren Doğan · Product area: TrustAI-X
+Osman Eren Doğan · Product area: TrustAI-X
 
-A simple binary classification model is trained on synthetic credit data and audited with three
-standard fairness metrics — **demographic parity**, **equal opportunity** and **disparate
-impact** — across three sensitive attributes. Each metric is explained in plain language, with a
-verdict on whether the model looks fair according to it.
+Fairness work on a simple credit-risk classifier trained on a synthetic İstanbul dataset. Three
+linked tasks: measure fairness, act on it, and report it for governance.
+
+| Task | Title | Status |
+|---|---|---|
+| [1](task1_fairness_metrics/) | Compare Basic Fairness Metrics | ✅ done |
+| [2](task2_governance_report/) | Governance-Based Fairness Assessment Report | ⬜ not started |
+| [3](task3_mitigation/) | Fairness Mitigation and Before/After Comparison | ✅ done |
 
 ## Structure
 
 ```
-src/
-  data_prep.py         features and sensitive group definitions
-  train_model.py       logistic regression baseline
-  fairness_metrics.py  the three metrics, computed from scratch
-results/               metric tables and figure
-fairness_analysis.ipynb  the deliverable notebook
+src/                      shared code
+  paths.py                where each task writes its output
+  data_prep.py            features and sensitive group definitions
+  train_model.py          logistic regression baseline (reusable helpers)
+  fairness_metrics.py     the three metrics, computed from scratch
+  mitigation.py           the three mitigation experiments
+task1_fairness_metrics/   metric comparison + results + notebook
+task2_governance_report/  governance assessment
+task3_mitigation/         mitigation experiments + before/after tables
 ```
 
-## Setup and running
+## Setup
 
 ```bash
 pip install -r requirements.txt
-python src/data_prep.py
-python src/train_model.py
-python src/fairness_metrics.py
 ```
 
-Then open `fairness_analysis.ipynb`. It only reads the CSVs in `results/`, so its tables cannot
-drift from the scripts. The dataset (~15 MB) is downloaded automatically on first run and is not
-committed.
+The dataset (~15 MB) is downloaded automatically on first run and is not committed.
 
-## Data and model
+```bash
+python src/data_prep.py        # features and group base rates
+python src/train_model.py      # baseline classifier
+python src/fairness_metrics.py # Task 1: the three metrics
+python src/mitigation.py       # Task 3: the three mitigations
+```
 
-100,000 synthetic credit applicants; target `delinquency_FL` (1 = fell behind on payments).
-Model: standard scaling + logistic regression, 80/20 stratified split, seed 42, held-out ROC AUC
-**0.914**. `class_weight="balanced"` compensates for only 26 % of applicants defaulting.
+## Model
+
+Standard scaling + logistic regression, 11 features, 80/20 stratified split, seed 42, held-out
+ROC AUC **0.914**. Deliberately simple — the assignments are about fairness, not accuracy.
+`class_weight="balanced"` compensates for only 26 % of applicants defaulting.
 
 **Framing.** In lending the favourable outcome is being **approved**, so every metric is computed
-on the approval rate rather than the raw model output.
+on approval rates rather than the raw model output.
 
-## The three metrics in plain language
+## Task 1 — the three metrics
 
-| Metric | The question it asks | Formula | Fair when |
-|---|---|---|---|
-| **Demographic parity** | Does the model approve the same *share* of people in each group? Ignores whether they repay. | `P(approved｜protected) − P(approved｜reference)` | \|gap\| ≤ 0.10 |
-| **Equal opportunity** | Among people who *genuinely repay*, is each group approved equally often? The merit-aware view. | same difference, restricted to those who repay | \|gap\| ≤ 0.10 |
-| **Disparate impact** | The legal test — the ratio of the two approval rates. | `P(approved｜protected) ÷ P(approved｜reference)` | ratio ≥ 0.80 (four-fifths rule) |
-
-## Results
-
-True delinquency rates differ substantially between groups, which matters for interpretation:
-
-| Attribute | Protected group | Reference group | Delinquency (prot. / ref.) |
-|---|---|---|---|
-| Education | below university (72.6 %) | university+ | 32.8 % / 8.7 % |
-| Age | young < 30 (18.2 %) | 30+ | 39.9 % / 23.2 % |
-| Home ownership | non-homeowner (32.7 %) | homeowner | 52.4 % / 13.5 % |
-
-Approval rates and metric verdicts:
-
-| Attribute | Approval (prot. / ref.) | Demographic parity | Equal opportunity | Disparate impact |
+| Attribute | Approval prot./ref. | Demographic parity | Equal opportunity | Disparate impact |
 |---|---|---|---|---|
-| **Education** | 0.605 / 0.814 | **−0.208** ❌ | **−0.028** ✅ | **0.744** ❌ |
-| **Age** | 0.455 / 0.708 | **−0.253** ❌ | **−0.165** ❌ | **0.642** ❌ |
-| **Home ownership** | 0.245 / 0.865 | **−0.620** ❌ | **−0.468** ❌ | **0.283** ❌ |
+| Education | 0.605 / 0.814 | −0.208 ❌ | **−0.028 ✅** | 0.744 ❌ |
+| Age | 0.455 / 0.708 | −0.253 ❌ | −0.165 ❌ | 0.642 ❌ |
+| Home ownership | 0.245 / 0.865 | −0.620 ❌ | −0.468 ❌ | 0.283 ❌ |
 
-## Is the model fair?
+The model **fails the four-fifths rule on all three attributes**. Education is the instructive
+case: the three metrics *disagree*. Demographic parity and disparate impact fail, but equal
+opportunity passes — among applicants who genuinely repay, both groups are approved at almost the
+same rate. A single fairness number is never enough; you have to say which definition you mean.
 
-**It depends on which metric you ask — and that is the point of the comparison.**
+→ [Task 1 details](task1_fairness_metrics/README.md)
 
-**Education.** The three metrics disagree. Demographic parity and disparate impact both fail:
-below-university applicants are approved 60.5 % of the time versus 81.4 %, a ratio of 0.744,
-under the 0.80 legal line. But **equal opportunity passes** (−0.028) — among applicants who
-genuinely repay, both groups are approved at almost the same rate. The approval gap therefore
-reflects the real difference in default rates (32.8 % vs 8.7 %) rather than the model
-mistreating creditworthy people. Whether that gap is acceptable is a policy question.
+## Task 3 — mitigation on the age axis
 
-**Age.** All three fail. Base rates explain part of it, but equal opportunity fails at −0.165:
-young applicants who **do** repay are approved about 16 points less often than older ones who
-repay. That is harder to justify.
+| Variant | Disparate impact (age) | Equal opportunity | Defaulters approved |
+|---|---|---|---|
+| baseline | 0.642 ❌ | −0.165 ❌ | 654 |
+| A: remove age + proxies | 0.709 ❌ | −0.096 ✅ | 670 |
+| **B: group threshold** | **0.822 ✅** | −0.031 ✅ | **824** |
+| C: reweighting | 0.789 ❌ | −0.035 ✅ | 733 |
 
-**Home ownership.** All three fail by the widest margins — a 62-point approval gap, a disparate
-impact ratio of **0.283** (barely a third of the legal threshold), and a 47-point equal
-opportunity gap. Creditworthy non-homeowners are rejected far more often than creditworthy
-homeowners.
+**Only the group-specific threshold reaches legal compliance**, at a cost of 170 additional
+approved defaulters per 20,000 applications. Removing age and its proxies is nearly free — ROC
+AUC even rises slightly — but is not sufficient alone. Mitigating age does **not** improve
+education or home ownership; home ownership stays near a third of the legal threshold under every
+variant.
 
-**Overall:** the model would not pass a fairness review. It fails the four-fifths rule on all
-three attributes.
-
-## Why the metrics disagree
-
-Demographic parity looks only at outcomes; equal opportunity conditions on who actually repays.
-When two groups genuinely default at different rates, these definitions **cannot both hold** — a
-known impossibility result (Kleinberg et al.; Chouldechova). Education demonstrates it directly:
-conditioning on repayment removes almost the entire gap. A single fairness number is never
-enough; you have to state which definition you are using.
-
-## Limitations
-
-1. The data is **synthetic** — results describe this model and dataset, not real people.
-2. All metrics use one decision threshold (0.5); a different threshold moves them.
-3. Group definitions (age 30 cut-off, education split) are analytic choices.
-4. No mitigation is attempted — the task is to measure and compare.
+→ [Task 3 details](task3_mitigation/README.md)
 
 ## Data source
 
 Synthetic dataset from
 [atalaydenknalbant/underbanked_risk_estimation](https://github.com/atalaydenknalbant/underbanked_risk_estimation),
-accompanying *Credit Risk Estimation with Non-Financial Features* ([arXiv:2512.12783](https://arxiv.org/abs/2512.12783)).
+accompanying *Credit Risk Estimation with Non-Financial Features*
+([arXiv:2512.12783](https://arxiv.org/abs/2512.12783)).
