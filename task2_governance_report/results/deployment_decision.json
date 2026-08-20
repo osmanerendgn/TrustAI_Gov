@@ -1,0 +1,18 @@
+{
+  "verdict": "NO-GO",
+  "rationale": "2 of 3 attributes remain below the four-fifths threshold even under the best mitigation tested.",
+  "blocking_risks": [
+    "FR-01",
+    "FR-03"
+  ],
+  "blocking_attributes": [
+    "Education level",
+    "Home ownership"
+  ],
+  "remediable_risks": [
+    "FR-02"
+  ],
+  "remediable_attributes": [
+    "Age"
+  ]
+}
